@@ -3,6 +3,7 @@
 void breakVase(int tile_x, int tile_y);
 void breakAll();
 int currentLevel();
+bool isStable(int row);
 
 ALogger<AMsgBox> logger;
 ATickRunner tickRunner;
@@ -13,7 +14,7 @@ void AScript()
 
     AConnect('Q', [] {
         breakVase(1, 9);
-        logger.Info("current level: #", currentLevel());
+        // logger.Info("current level: #", currentLevel());
     });
 
     tickRunner.Start([] {
@@ -45,4 +46,9 @@ void breakAll()
 int currentLevel() // int 0x6C, 0x160, 0x768, 0x6A9EC0
 {
     return AGetPvzBase()->MPtr<APvzStruct>(0x768)->MPtr<APvzStruct>(0x160)->MRef<int>(0x6c);
+}
+
+bool isStable(int row)
+{
+    return true;
 }
