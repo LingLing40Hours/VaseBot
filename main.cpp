@@ -4,6 +4,7 @@ void breakVase(int tile_x, int tile_y);
 void breakAll();
 int currentLevel();
 bool isStable(int row);
+vector<AZombie> rowZombies(int row);
 
 ALogger<AMsgBox> logger;
 ATickRunner tickRunner;
@@ -41,16 +42,16 @@ void AScript()
     });
 }
 
-void breakVase(int tile_x, int tile_y)
+void breakVase(int tile_y, int tile_x)
 { // x rightwards from 1, y downwards from 1a
-    ALeftClick(tile_x, tile_y);
+    AClickGrid(tile_y, tile_x);
 }
 
 void breakAll()
 {
-    for (int x = 3; x <= 9; ++x) {
+    for (int x = 9; x >= 3; --x) {
         for (int y = 1; y <= 5; ++y) {
-            breakVase(x, y);
+            breakVase(y, x);
         }
     }
 }
@@ -60,7 +61,29 @@ int currentLevel() // int 0x6C, 0x160, 0x768, 0x6A9EC0
     return AGetPvzBase()->MPtr<APvzStruct>(0x768)->MPtr<APvzStruct>(0x160)->MRef<int>(0x6c);
 }
 
-bool isStable(int row)
+// recurse upon zombie death, plant death, zombie reach plant
+// end upon zombie reach house
+bool isStable(int row,
+    vector<AZombie>& zombies, double* zombieAbscissas, int zombieCount,
+    vector<APlant>& plants, double* plantHealths, int plantCount)
 {
+    vector<AZombie> zombies = rowZombies(row);
+    for (AZombie zombie : zombies) {
+        if (zombie.AttackAbscissa() > plant_left && zombie.AttackAbscissa() < plant_right) {
+            // plant under attack
+        }
+    }
     return true;
+}
+
+vector<AZombie>& rowZombies(int row)
+{
+    vector<AZombie> zombies;
+    AAliveFilter<AZombie> zombieFilter;
+    for (auto&& zombie : zombieFilter) {
+        if (zombie.Row() == row) {
+            zombies.push_back(zombie);
+        }
+    }
+    return zombies;
 }
