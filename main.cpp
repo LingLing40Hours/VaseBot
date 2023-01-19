@@ -14,19 +14,7 @@ void AScript()
     aPainter.Draw(AText("Hello AsmVsZombies", 400, 300), 500);
 
     AConnect('Q', [] {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         breakVase(1, 9);
-=======
-            breakVase(9, 1);
->>>>>>> Stashed changes
-=======
-            breakVase(9, 1);
->>>>>>> Stashed changes
-=======
-            breakVase(9, 1);
->>>>>>> Stashed changes
         // logger.Info("current level: #", currentLevel());
     });
 
