@@ -19,13 +19,13 @@ void AScript()
 <<<<<<< Updated upstream
         breakVase(1, 9);
 =======
-        breakVase(9, 1);
+            breakVase(9, 1);
 >>>>>>> Stashed changes
 =======
-        breakVase(9, 1);
+            breakVase(9, 1);
 >>>>>>> Stashed changes
 =======
-        breakVase(9, 1);
+            breakVase(9, 1);
 >>>>>>> Stashed changes
         // logger.Info("current level: #", currentLevel());
     });
@@ -87,3 +87,5 @@ vector<AZombie>& rowZombies(int row)
     }
     return zombies;
 }
+
+// new
