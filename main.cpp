@@ -12,7 +12,7 @@ ATickRunner tickRunner;
 
 int vaseCounter = -1;
 int* pVaseCounter = &vaseCounter;
-int MOUSE_CD = 20;
+int MOUSE_CD = 20; // at least 20 for vase breaking
 
 void AScript()
 {
@@ -34,6 +34,7 @@ void AScript()
             }
             --vaseCounter;
         }
+
         AAliveFilter<AZombie> zombieFilter;
         int y = 0;
         for (auto&& zombie : zombieFilter) {
