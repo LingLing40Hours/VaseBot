@@ -1,11 +1,13 @@
 #include <avz.h> // 包含本框架的头文件
-#include <stdlib.h>
+#include <vector>
 
 void breakVase(int tile_x, int tile_y);
 void breakAll(int* counter);
 int currentLevel();
-bool isStable(int row);
-void getRowZombies(int row, std::vector<AZombie>& zombies);
+bool isStable(int row,
+    std::vector<AZombie*>& pZombies, double* zombieAbscissas, double* zombieHealths, int zombieCount,
+    std::vector<APlant*>& pPlants, double* plantAbscissas, double* plantHealths, int plantCount);
+void getRowZombies(int row, std::vector<AZombie*>& pZombies);
 
 ALogger<AMsgBox> logger;
 ATickRunner tickRunner;
@@ -37,7 +39,7 @@ void AScript()
 
         AAliveFilter<AZombie> zombieFilter;
         int y = 0;
-        for (auto&& zombie : zombieFilter) {
+        for (auto& zombie : zombieFilter) {
             if (zombie.Type() == AZOMBIE) {
                 aPainter.Draw(AText("A Regular Zombie with speed " + std::to_string(zombie.Speed()), 200, y), 1);
                 y += 20;
@@ -70,27 +72,27 @@ int currentLevel() // int 0x6C, 0x160, 0x768, 0x6A9EC0
 
 // recurse upon zombie death, plant death, zombie reach plant
 // end upon zombie reach house
-/*
 bool isStable(int row,
-    std::vector<AZombie>& zombies, double* zombieAbscissas, int zombieCount,
-    std::vector<APlant>& plants, double* plantHealths, int plantCount)
+    std::vector<AZombie*>& pZombies, double* zombieAbscissas, double* zombieHealths, int zombieCount,
+    std::vector<APlant*>& pPlants, double* plantAbscissas, double* plantHealths, int plantCount)
 {
-    std::vector<AZombie> zombies = rowZombies(row);
-    for (AZombie zombie : zombies) {
-        if (zombie.AttackAbscissa() > plant_left && zombie.AttackAbscissa() < plant_right) {
+    for (AZombie*& pZombie : pZombies) {
+        int plant_left = 0;
+        int plant_right = 0;
+        if (pZombie->AttackAbscissa() > plant_left && pZombie->AttackAbscissa() < plant_right) {
             // plant under attack
         }
     }
     return true;
-}*/
+}
 
-/*
-void getRowZombies(int row, std::vector<AZombie>& zombies)
+void getRowZombies(int row, std::vector<AZombie*>& pZombies)
 {
     AAliveFilter<AZombie> zombieFilter;
-    for (auto&& zombie : zombieFilter) {
+    for (auto& zombie : zombieFilter) {
         if (zombie.Row() == row) {
-            zombies.push_back(zombie);
+            AZombie* pZombie = &zombie;
+            pZombies.push_back(pZombie);
         }
     }
-}*/
+}
