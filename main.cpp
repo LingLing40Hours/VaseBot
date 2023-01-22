@@ -5,7 +5,7 @@ void breakVase(int tile_x, int tile_y);
 void breakAll(int* counter);
 int currentLevel();
 bool isStable(int row,
-    std::vector<AZombie*>& pZombies, double* zombieAbscissas, double* zombieHealths, int zombieCount,
+    std::vector<AZombie*>& pZombies, double* zombieAbscissas, double* zombieHealths, double* slownessCDs, int zombieCount,
     std::vector<APlant*>& pPlants, double* plantAbscissas, double* plantHealths, int plantCount);
 void getRowZombies(int row, std::vector<AZombie*>& pZombies);
 
@@ -24,6 +24,10 @@ void AScript()
     AConnect('Q', [] {
         breakAll(pVaseCounter);
         // logger.Info("current level: #", currentLevel());
+    });
+
+    AConnect('W', [] {
+        ACard(AREPEATER, 1, 1);
     });
 
     tickRunner.Start([] {
@@ -70,10 +74,21 @@ int currentLevel() // int 0x6C, 0x160, 0x768, 0x6A9EC0
     return AGetPvzBase()->MPtr<APvzStruct>(0x768)->MPtr<APvzStruct>(0x160)->MRef<int>(0x6c);
 }
 
+void getRowZombies(int row, std::vector<AZombie*>& pZombies)
+{
+    // AAliveFilter<AZombie> zombieFilter;
+    for (auto& zombie : aAliveZombieFilter) {
+        if (zombie.Row() == row) {
+            AZombie* pZombie = &zombie;
+            pZombies.push_back(pZombie);
+        }
+    }
+}
+
 // recurse upon zombie death, plant death, zombie reach plant
 // end upon zombie reach house
 bool isStable(int row,
-    std::vector<AZombie*>& pZombies, double* zombieAbscissas, double* zombieHealths, int zombieCount,
+    std::vector<AZombie*>& pZombies, double* zombieAbscissas, double* zombieHealths, double* slownessCDs, int zombieCount,
     std::vector<APlant*>& pPlants, double* plantAbscissas, double* plantHealths, int plantCount)
 {
     for (AZombie*& pZombie : pZombies) {
@@ -84,15 +99,4 @@ bool isStable(int row,
         }
     }
     return true;
-}
-
-void getRowZombies(int row, std::vector<AZombie*>& pZombies)
-{
-    AAliveFilter<AZombie> zombieFilter;
-    for (auto& zombie : zombieFilter) {
-        if (zombie.Row() == row) {
-            AZombie* pZombie = &zombie;
-            pZombies.push_back(pZombie);
-        }
-    }
 }
