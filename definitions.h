@@ -1,5 +1,6 @@
 #include <avz.h> // 包含本框架的头文件
 
+//======== Output To Game ========
 void breakVase(int tile_y, int tile_x)
 { // x rightwards from 1, y downwards from 1
     AClickGrid(tile_y, tile_x);
@@ -16,6 +17,11 @@ void breakAll(int* pVaseCounter)
     *pVaseCounter = 34 * MOUSE_CD;
 }
 
+void placeSeed(ASeed seed, int tile_y, int tile_x)
+{
+}
+
+//======== Input From Game ========
 int currentLevel() // int 0x6C, 0x160, 0x768, 0x6A9EC0
 {
     return AGetPvzBase()->MPtr<APvzStruct>(0x768)->MPtr<APvzStruct>(0x160)->MRef<int>(0x6c);

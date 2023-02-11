@@ -4,6 +4,7 @@
 // output to game
 void breakVase(int tile_x, int tile_y);
 void breakAll(int* counter);
+void placeSeed(ASeed seed, int tile_y, int tile_x);
 
 // input from game
 int currentLevel();

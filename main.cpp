@@ -31,9 +31,8 @@ void AScript()
             --vaseCounter;
         }
 
-        AAliveFilter<AZombie> zombieFilter;
         int y = 0;
-        for (auto& zombie : zombieFilter) {
+        for (auto& zombie : aAliveZombieFilter) {
             if (zombie.Type() == AZOMBIE) {
                 aPainter.Draw(AText("A Regular Zombie with speed " + std::to_string(zombie.Speed()), 200, y), 1);
                 y += 20;
