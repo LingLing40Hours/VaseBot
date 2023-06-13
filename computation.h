@@ -4,11 +4,18 @@
 #include <avz.h>
 
 
+double stabilizingDPSBack(int row);
+double stabilizingDPSFront(int row);
+int totalHealthToHouse(int row);
 bool isStable(int row,
     std::vector<AZombie*>& pZombies, double* zombieAbscissas, double* zombieHealths, double* slownessCDs, int zombieCount,
     std::vector<APlant*>& pPlants, double* plantAbscissas, double* plantHealths, int plantCount); // recursive
 bool willSquash(int tile_x, double zombieAbscissa);
 
+
+int totalHealthToHouse(int row) {
+    return 0;
+}
 
 // recurse upon zombie death, plant death, zombie reach plant
 // end upon zombie reach house

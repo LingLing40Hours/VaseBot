@@ -5,18 +5,23 @@
 #include "input.h"
 #include "output.h"
 
-//int vaseCounter = -1;
-//int* pVaseCounter = &vaseCounter;
 
-void AScript() {
-    // 注意此条代码需要到选卡界面或者战斗界面才能看到运行效果
-    // aPainter.Draw(AText("Hello AsmVsZombies", 400, 300), 500);
+ACoroutine openingStrategy();
+ACoroutine midgameStrategy();
 
-    AConnect('Q', breakAll);
+ACoroutine ACoScript() {
 
-    AConnect('W', [] {
-        ACard(AREPEATER, 1, 1);
+    ASetReloadMode(AReloadMode::MAIN_UI);
+    aItemCollector.Pause(); //sun collection handled by pvz toolkit
+    
+    AConnect('Q', breakAllOriginal);
+
+    AConnect('W', []() -> ACoroutine {
+        bool done = false; bool *pdone = &done;
+        ACoLaunch(std::bind(breakAll, pdone, true, true, true));
+        co_await [=] { return *pdone; };
     });
+
 
     tickRunner.Start([] {
         // debug
@@ -28,4 +33,44 @@ void AScript() {
             }
         }
     });
+
+    //game loop
+    /*
+    int level = 1;
+    while (level <= TARGET_LEVEL) {
+        if (level <= 30) {
+            openingStrategy();
+        }
+        else {
+            midgameStrategy();
+        }
+        
+        //wait for level change
+        while (currentLevel() == level) {
+            //swag squash (in w pattern) and plantern
+        }
+        level = currentLevel();
+    }*/
+    co_return;
+}
+
+
+ACoroutine openingStrategy() {
+    bool done = false; bool *pdone = &done;
+    ACoLaunch(std::bind(breakAll, pdone, false, true, false));
+    co_await [=] { return *pdone; };
+    bool stable = false;
+
+    while (!stable) {
+        //update stability
+    }
+}
+
+ACoroutine midgameStrategy() {
+    int vaseCount = initialVaseCount();
+    bool stable = true;
+    while (vaseCount != 0 || !stable) {
+
+    }
+    co_return;
 }
