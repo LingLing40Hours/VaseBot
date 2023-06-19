@@ -69,3 +69,30 @@ ACoroutine test() {
     }
 }
 */
+
+/* tickRunner, zombie info
+    tickRunner.Start([] {
+        // debug
+        int y = 0;
+        for (auto& zombie : aAliveZombieFilter) {
+            if (zombie.Type() == AZOMBIE) {
+                aPainter.Draw(AText("A Regular Zombie with speed " + std::to_string(zombie.Speed()), 200, y), 1);
+                y += 20;
+            }
+        }
+    });
+*/
+
+//non-functional music controls; see setMusicVolume in output.h
+//double *pMusicVolume = reinterpret_cast<double*>(0x6a9ec0 + 0xd0);
+//volatile double &musicVolume = AMPtr<APvzStruct>(0x6a9ec0)->MRef<double>(0xd0); //doesn't work unless set manually
+//volatile bool &musicPaused = AMPtr<APvzStruct>(0x6a9ec0)->MPtr<APvzStruct>(0x83c)->MRef<bool>(0x40);
+
+    //musicVolume = 0; //-std::numeric_limits<double>::infinity();
+    //musicPaused = true;
+
+    //void (*BASS_Stop)() = reinterpret_cast<void(*)()>(reinterpret_cast<int>(0x6a9ff0) + 0x1c);
+    //BASS_Stop();
+
+    //void (*setMusicVolume)(double) = reinterpret_cast<void(*)(double)>(0x554d70);
+    //setMusicVolume(0);

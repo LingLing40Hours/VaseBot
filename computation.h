@@ -12,6 +12,10 @@ bool isStable(int row,
     std::vector<APlant*>& pPlants, double* plantAbscissas, double* plantHealths, int plantCount); // recursive
 bool willSquash(int tile_x, double zombieAbscissa);
 
+void convergeDelayTimeAndPoint(double range, std::vector<AZombie*> zombies, double &delayTime, double &point);
+bool convergeLawnWalnut(double range, std::vector<AZombie*> zombies);
+double convergePointLawn(double range, std::vector<AZombie*> zombies);
+
 
 int totalHealthToHouse(int row) {
     return 0;
@@ -35,6 +39,27 @@ bool isStable(int row,
 
 bool willSquash(int tile_x, double zombieAbscissa) {
     return false;
+}
+
+//total obstacle health required to force zombies to converge within range
+void convergeDelayTimeAndPoint(double range, std::vector<AZombie*> zombies, double &delayTime, double &point) {
+
+}
+
+bool convergeLawnWalnut(double range, std::vector<AZombie*> zombies) {
+    return false;
+}
+
+//assumes no plant obstruction
+//return -inf if no lawn convergence
+double convergePointLawn(double range, std::vector<AZombie*> zombies) {
+    if (zombies.size() == 1 && zombies[0]->Abscissa() > HOUSE_X0) {
+        return zombies[0]->Abscissa();
+    }
+
+    
+
+    return 0;
 }
 
 #endif

@@ -6,21 +6,25 @@
 //#include <future>
 #include "globals.h"
 
+#define ASaveAllRegister "esp", "ebp", "eax", "ebx", "ecx", "edx", "esi", "edi"
+
 
 void breakVase(int tile_x, int tile_y);
-ACoroutine breakAllUtil(bool *pdone, int x, int y, int x0, int y0, int x1, int y1, std::vector<APlaceItem*> &vases, std::vector<std::vector<bool>> &vaseBroken);
-ACoroutine breakAll(bool *pdone, bool xdir, bool ydir, bool rowMajor);
+ACoroutine breakAllUtil(bool *pDone, int x, int y, int x0, int y0, int x1, int y1, std::vector<APlaceItem*> &vases, std::vector<std::vector<bool>> &vaseBroken);
+ACoroutine breakAll(bool *pDone, bool xdir, bool ydir, bool rowMajor);
 ACoroutine breakAllOriginal();
 void findVases(std::vector<APlaceItem*> &vases, std::vector<std::vector<bool>> &vaseBroken);
 void updateVases(std::vector<APlaceItem*> &vases, std::vector<std::vector<bool>> &vaseBroken);
 void placeSeed(ASeed seed, int tile_y, int tile_x);
+void stopMusic();
+void setMusicVolume(double volume);
 
 
 void breakVase(int tile_y, int tile_x) { // x rightwards from 1, y downwards from 1
     AClickGrid(tile_y, tile_x);
 }
 
-ACoroutine breakAllUtil(bool *pdone, int x, int y, int x0, int y0, int x1, int y1, std::vector<APlaceItem*> &vases, std::vector<std::vector<bool>> &vaseBroken) {
+ACoroutine breakAllUtil(bool *pDone, int x, int y, int x0, int y0, int x1, int y1, std::vector<APlaceItem*> &vases, std::vector<std::vector<bool>> &vaseBroken) {
     if (x != x0 || y != y0) {
         updateVases(vases, vaseBroken);
     }
@@ -33,10 +37,10 @@ ACoroutine breakAllUtil(bool *pdone, int x, int y, int x0, int y0, int x1, int y
             co_await ANowDelayTime(MOUSE_CD);
         }
     }
-    *pdone = true;
+    *pDone = true;
 }
 
-ACoroutine breakAll(bool *pdone, bool xdir, bool ydir, bool rowMajor) {
+ACoroutine breakAll(bool *pDone, bool xdir, bool ydir, bool rowMajor) {
     std::vector<std::vector<bool>> vaseBroken = std::vector(LAWN_HEIGHT, std::vector(LAWN_WIDTH, true));
     std::vector<APlaceItem*> vases;
 
@@ -54,22 +58,22 @@ ACoroutine breakAll(bool *pdone, bool xdir, bool ydir, bool rowMajor) {
     if (rowMajor) {
         for (int y=y0; y != y1; y += dy) {
             for (int x=x0; x != x1; x += dx) {
-                bool done2 = false; bool *pdone2 = &done2;
-                ACoLaunch(std::bind(breakAllUtil, pdone2, x, y, x0, y0, x1, y1, vases, vaseBroken));
-                co_await [=] { return *pdone2; };
+                bool coDone = false; bool *pCoDone = &coDone;
+                ACoLaunch(std::bind(breakAllUtil, pCoDone, x, y, x0, y0, x1, y1, vases, vaseBroken));
+                co_await [=] { return *pCoDone; };
             }
         }
     }
     else {
         for (int x=x0; x != x1; x += dx) {
             for (int y=y0; y != y1; y += dy) {
-                bool done2 = false; bool *pdone2 = &done2;
-                ACoLaunch(std::bind(breakAllUtil, pdone2, x, y, x0, y0, x1, y1, vases, vaseBroken));
-                co_await [=] { return *pdone2; };
+                bool coDone = false; bool *pCoDone = &coDone;
+                ACoLaunch(std::bind(breakAllUtil, pCoDone, x, y, x0, y0, x1, y1, vases, vaseBroken));
+                co_await [=] { return *pCoDone; };
             }
         }
     }
-    *pdone = true;
+    *pDone = true;
 }
 
 ACoroutine breakAllOriginal() {
@@ -101,6 +105,24 @@ void updateVases(std::vector<APlaceItem*> &vases, std::vector<std::vector<bool>>
 }
 
 void placeSeed(ASeed seed, int tile_y, int tile_x) {
+}
+
+void stopMusic() {
+    setMusicVolume(0);
+}
+
+void setMusicVolume(double volume) {
+    auto ptr = &volume;
+    __asm__ __volatile__(
+        "movl 0x6a9ec0, %%ecx;"
+        "movl %[ptr], %%eax;"
+        "pushl 4(%%eax);"
+        "pushl 0(%%eax);"
+        "movl $0x554D70, %%eax;"
+        "calll *%%eax;"
+        :
+        : [ptr] "m"(ptr)
+        : ASaveAllRegister);
 }
 
 #endif
