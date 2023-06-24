@@ -14,7 +14,15 @@ bool willSquash(int tile_x, double zombieAbscissa);
 
 void convergeDelayTimeAndPoint(double range, std::vector<AZombie*> zombies, double &delayTime, double &point);
 bool convergeLawnWalnut(double range, std::vector<AZombie*> zombies);
-double convergePointLawn(double range, std::vector<AZombie*> zombies);
+
+double hurtboxLeft(AZombie* pZombie);
+double hurtboxRight(AZombie* pZombie);
+double hitboxLeft(AZombie* pZombie);
+double hitboxRight(AZombie* pZombie);
+RRange convergeRangeAny(double hitboxRange, std::vector<AZombie*> zombies);
+RRange convergeRangeCenter(double hitboxRange, std::vector<AZombie*> zombies);
+RRange convergeRangeLeft(double hitboxRange, std::vector<AZombie*> zombies);
+RRange convergeRangeRight(double hitboxRange, std::vector<AZombie*> zombies);
 
 
 int totalHealthToHouse(int row) {
@@ -41,7 +49,7 @@ bool willSquash(int tile_x, double zombieAbscissa) {
     return false;
 }
 
-//total obstacle health required to force zombies to converge within range
+//total delay time required to force zombies to converge within range
 void convergeDelayTimeAndPoint(double range, std::vector<AZombie*> zombies, double &delayTime, double &point) {
 
 }
@@ -50,16 +58,45 @@ bool convergeLawnWalnut(double range, std::vector<AZombie*> zombies) {
     return false;
 }
 
-//assumes no plant obstruction
-//return -inf if no lawn convergence
-double convergePointLawn(double range, std::vector<AZombie*> zombies) {
-    if (zombies.size() == 1 && zombies[0]->Abscissa() > HOUSE_X0) {
-        return zombies[0]->Abscissa();
+double hurtboxLeft(AZombie* pZombie) {
+    return pZombie->Abscissa() + pZombie->BulletAbscissa();
+}
+
+double hurtboxRight(AZombie* pZombie) {
+    return hurtboxLeft(pZombie) + pZombie->HurtWidth();
+}
+
+double hitboxLeft(AZombie* pZombie) {
+    return pZombie->Abscissa() + pZombie->AttackAbscissa();
+}
+
+double hitboxRight(AZombie* pZombie) {
+    return hitboxLeft(pZombie) + pZombie->MVal<int>(0xa4);
+}
+
+//the following functions assume no plant obstruction
+    //range of convergence points c where all hitboxes overlap with [c, c+hitboxRange]
+    //range of convergence points c where all hitbox centers within [c, c+hitboxRange]
+    //range of convergence points c where all hitbox left edges within [c, c+hitboxRange]
+    //range of convergence points c where all hitbox right edges within [c, c+hitboxRange]
+RRange convergeRangeAny(double hitboxRange, std::vector<AZombie*> zombies) {
+    if (zombies.size() == 0) {
+        return RRange(N_INF, P_INF);
     }
 
-    
+    AZombie* first = zombies[0];
+    double v1 = first->Speed();
+    double x1Left = hurtboxLeft(first);
+    double x1Right = hurtboxRight(first);
+    RRange ans(N_INF, x1Right);
 
-    return 0;
+    for (std::vector<AZombie*>::iterator it = zombies.begin()+1; it != zombies.end(); ++it) {
+        RRange pairRange = RRange(
+    }
 }
+
+RRange convergeRangeCenter(double hitboxRange, std::vector<AZombie*> zombies);
+RRange convergeRangeLeft(double hitboxRange, std::vector<AZombie*> zombies);
+RRange convergeRangeRight(double hitboxRange, std::vector<AZombie*> zombies);
 
 #endif

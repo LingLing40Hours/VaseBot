@@ -16,7 +16,7 @@ if (x != 3 || y != 5) {
 
 /* looping over seed packets
     AConnect('W', [] {
-        int gx = LAWN_WIDTH, gy = 1;
+        int gx = LAWN_TILE_WIDTH, gy = 1;
         int itemTotal = AGetMainObject()->ItemTotal();
         auto itemArray = AGetMainObject()->ItemArray();
         for (int itemID=0; itemID < itemTotal; ++itemID) {
@@ -31,7 +31,7 @@ if (x != 3 || y != 5) {
                     ALeftClick(item.Abscissa(), item.Ordinate());
                     AClickGrid(gy, gx);
                     ++gy;
-                    if (gy == LAWN_HEIGHT+1) {
+                    if (gy == LAWN_TILE_HEIGHT+1) {
                         --gx;
                         gy = 1;
                     }
@@ -96,3 +96,16 @@ ACoroutine test() {
 
     //void (*setMusicVolume)(double) = reinterpret_cast<void(*)(double)>(0x554d70);
     //setMusicVolume(0);
+
+/* find house_x0
+    tickRunner.Start([] {
+        double minX = std::numeric_limits<double>::infinity();
+        for (auto &zombie : aAliveZombieFilter) {
+            if (zombie.Abscissa() < minX) {
+                minX = zombie.Abscissa();
+            }
+        }
+        if (minX < -99)
+            msgBoxLogger.Error(std::to_string(minX));
+    });
+*/

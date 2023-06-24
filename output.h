@@ -41,17 +41,17 @@ ACoroutine breakAllUtil(bool *pDone, int x, int y, int x0, int y0, int x1, int y
 }
 
 ACoroutine breakAll(bool *pDone, bool xdir, bool ydir, bool rowMajor) {
-    std::vector<std::vector<bool>> vaseBroken = std::vector(LAWN_HEIGHT, std::vector(LAWN_WIDTH, true));
+    std::vector<std::vector<bool>> vaseBroken = std::vector(LAWN_TILE_HEIGHT, std::vector(LAWN_TILE_WIDTH, true));
     std::vector<APlaceItem*> vases;
 
     //get vase pointers
     findVases(vases, vaseBroken);
 
     //find xy bounds
-    int x0 = xdir ? VASE_X0 : LAWN_WIDTH-1;
-    int y0 = ydir ? 0 : LAWN_HEIGHT-1;
-    int x1 = xdir ? LAWN_WIDTH : -1;
-    int y1 = ydir ? LAWN_HEIGHT : -1;
+    int x0 = xdir ? VASE_X0 : LAWN_TILE_WIDTH-1;
+    int y0 = ydir ? 0 : LAWN_TILE_HEIGHT-1;
+    int x1 = xdir ? LAWN_TILE_WIDTH : -1;
+    int y1 = ydir ? LAWN_TILE_HEIGHT : -1;
     int dx = xdir ? 1 : -1;
     int dy = ydir ? 1 : -1;
 

@@ -59,6 +59,18 @@ ACoroutine ACoScript() {
 }
 
 
+//converge on potato mine
+//potato mine right of walnut
+//if front zombies too fast, use a single snow pea
+//potato mine can obstruct during activation phase
+//squash can obstruct during targeting phase
+//snow pea to slow more than one zombie?
+//finish obstructing as early as possible
+//kill as late as possible
+
+//ensuring all health is consumed and zombies converge, choose convergence points as far left as possible
+//t = when last zombie reaches convergence point
+//x = 
 //sacrificial plants (for multisquash, multimine)
 ACoroutine warmupStrategy(bool *pDone) {
     //break all
@@ -67,27 +79,15 @@ ACoroutine warmupStrategy(bool *pDone) {
     co_await [=] { return *pCoDone; };
 
     //get zombie pointers by row
-    std::vector<std::vector<AZombie*>> zombies(LAWN_HEIGHT, std::vector<AZombie*>());
+    std::vector<std::vector<AZombie*>> zombies(LAWN_TILE_HEIGHT, std::vector<AZombie*>());
     for (auto &zombie : aAliveZombieFilter) {
         zombies[zombie.Row()].push_back(&zombie);
     }
 
-    std::vector<double> convergencePoints(LAWN_HEIGHT, 0);
+    std::vector<double> convergencePoints(LAWN_TILE_HEIGHT, 0);
     
-    for (int row=0; row < LAWN_HEIGHT; ++row) {
+    for (int row=0; row < LAWN_TILE_HEIGHT; ++row) {
         //do stuff
-        //converge on potato mine
-        //potato mine right of walnut
-        //if front zombies too fast, use a single snow pea
-        //potato mine can obstruct during activation phase
-        //squash can obstruct during targeting phase
-        //snow pea to slow more than one zombie?
-        //finish obstructing as early as possible
-        //kill as late as possible
-
-        //ensuring all health is consumed and zombies converge, choose convergence points as far left as possible
-        //t = when last zombie reaches convergence point
-        //x = 
 
 
         //remove dead zombie pointers
@@ -101,14 +101,10 @@ ACoroutine warmupStrategy(bool *pDone) {
     }
 
     tickRunner.Start([] {
-        double minX = std::numeric_limits<double>::infinity();
         for (auto &zombie : aAliveZombieFilter) {
-            if (zombie.Abscissa() < minX) {
-                minX = zombie.Abscissa();
-            }
+            msgBoxLogger.Error(zombie.Speed());
+            break;
         }
-        if (minX < -99)
-            msgBoxLogger.Error(std::to_string(minX));
     });
 
     *pDone = true;
